@@ -7,15 +7,14 @@
 
 # Dependencies
 vendor/
-app/vendor/
-composer.lock
+backend/vendor/
 frontend/node_modules/
 frontend/dist/
 
 # Cache & Logs
-runtime/*
-!runtime/.htaccess
-!runtime/index.html
+backend/runtime/*
+!backend/runtime/.htaccess
+!backend/runtime/index.html
 *.log
 *.cache
 

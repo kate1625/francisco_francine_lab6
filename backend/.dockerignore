@@ -1,7 +1,6 @@
 .env
 .git
 .github
-frontend/node_modules
-frontend/dist
+vendor
 runtime/cache
 runtime/logs

@@ -10,7 +10,7 @@ services:
       - key: API_HELPER_ENABLED
         value: "true"
       - key: API_ALLOWED_ORIGIN
-        value: https://francine-kate-francisco-api.onrender.com
+        sync: false
       - key: DB_DRIVER
         value: mysql
       - key: DB_CHARSET
