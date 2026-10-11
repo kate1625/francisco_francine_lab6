@@ -227,14 +227,14 @@ This repository contains the LavaLust JSON API. The React product-management cli
 2. Generate distinct JWT secrets with `php lava jwt:generate`.
 3. Set `API_HELPER_ENABLED=true` in `.env`. Temporarily set `MIGRATION_ENABLED=true`, then run `php lava migration run`. Set `MIGRATION_ENABLED=false` again after the migration finishes.
 4. Start the API with `php lava serve --port=3000`.
-5. In another terminal, change to the `frontend` directory, copy `.env.example` to `.env`, then run `npm ci` and `npm run dev`. The Vite development server proxies `/api` requests to `http://localhost:3000`.
+5. Set `API_ALLOWED_ORIGIN=http://localhost:5173` in the backend `.env`. In another terminal, change to the `frontend` directory, copy `.env.example` to `.env`, then run `npm ci` and `npm run dev`. `VITE_API_URL=/api` uses the Vite development proxy to `http://localhost:3000`.
 6. Create an account from the sign-in screen. Registration creates a standard user account. Sign in and manage products from the dashboard.
 
 The API supports `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/refresh`, and `POST /api/auth/logout`. Product endpoints are protected by LavaLust JWT bearer authentication: `GET /api/products`, `GET /api/products/{id}`, `POST /api/products`, `PUT/PATCH /api/products/{id}`, and `DELETE /api/products/{id}`.
 
 ### Deploy to Render and Aiven
 
-The `render.yaml` deploys only the API as a Docker-based LavaLust service. Configure `API_ALLOWED_ORIGIN` with the deployed frontend's origin, without a trailing slash. Deploy the React app separately and set its `VITE_API_URL` build environment variable to the API base URL ending in `/api`. Set the prompted database variables from the Aiven service. Keep `JWT_SECRET` and `REFRESH_TOKEN_KEY` distinct, random, and at least 32 characters long. For stronger server identity verification, set `DB_SSL_CA` to a mounted copy of Aiven's CA bundle and use `DB_SSL_MODE=VERIFY_IDENTITY`.
+The `render.yaml` deploys only the API as a Docker-based LavaLust service. Deploy the React app separately. Set `API_ALLOWED_ORIGIN` on the API to the exact deployed frontend origin (scheme and hostname only, no path or trailing slash), and set `VITE_API_URL` in the frontend build environment to the API URL ending in `/api`. For example, if the API URL is `https://your-backend-url.onrender.com`, use `https://your-backend-url.onrender.com/api` for `VITE_API_URL`. Set the prompted database variables from the Aiven service. Keep `JWT_SECRET` and `REFRESH_TOKEN_KEY` distinct, random, and at least 32 characters long. For stronger server identity verification, set `DB_SSL_CA` to a mounted copy of Aiven's CA bundle and use `DB_SSL_MODE=VERIFY_IDENTITY`.
 
 Keep `MIGRATION_ENABLED=false` on the deployed API. To run migrations, execute `MIGRATION_ENABLED=true php lava migration run` from a trusted Render shell/container session. The CLI setting is limited to that process; web migration routes additionally require a valid administrator JWT. The API defaults and `.env.example` keep migrations and the API helper disabled until explicitly configured.
 

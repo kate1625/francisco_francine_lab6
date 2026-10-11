@@ -1,4 +1,5 @@
-const API_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
+const configuredApiUrl = import.meta.env.VITE_API_URL?.trim();
+const API_URL = (configuredApiUrl || (import.meta.env.DEV ? '/api' : '')).replace(/\/+$/, '');
 const SESSION_KEY = 'stockroom.session';
 let refreshInFlight = null;
 
@@ -19,6 +20,10 @@ export function clearSession() {
 }
 
 async function send(path, options = {}, retried = false) {
+  if (!API_URL) {
+    throw new Error('API URL is not configured. Set VITE_API_URL to your backend URL ending in /api.');
+  }
+
   const session = readSession();
   const isPublicAuthRequest = ['/auth/login', '/auth/register', '/auth/refresh'].includes(path);
   const headers = new Headers(options.headers || {});
